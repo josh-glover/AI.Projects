@@ -1,7 +1,7 @@
-﻿using Project1Glover.Models;
-using System;
+﻿using System;
+using AI.Projects.Project1.Models;
 
-namespace Project1Glover.Utilities
+namespace AI.Projects.Project1.Utilities
 {
     public static class CityExtensions
     {

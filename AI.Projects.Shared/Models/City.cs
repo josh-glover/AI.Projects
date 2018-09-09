@@ -1,4 +1,4 @@
-﻿namespace Project1Glover.Models
+﻿namespace AI.Projects.Project1.Models
 {
     public class City
     {

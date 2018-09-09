@@ -13,14 +13,19 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical"
+        <StackPanel x:Name="SideMenu"
+                    Orientation="Vertical"
                     Background="{StaticResource ApplicationMainBrush}"
                     Grid.Column="0">
-            <ToggleButton x:Name="SelectProjectOne"
+            <RadioButton x:Name="ProjectOne"
                           Content="1"
-                          Style="{StaticResource SideMenuToggleButtonStyle}" />
+                          Style="{StaticResource SideMenuRadioButtonStyle}" />
+            <RadioButton x:Name="ProjectTwo"
+                         Content="2"
+                         Style="{StaticResource SideMenuRadioButtonStyle}" />
         </StackPanel>
-        <ContentPresenter Content="{Binding ActiveItem}"
-                          Grid.Column="1" />
+        
+        <ContentControl x:Name="ActiveItem"
+                        Grid.Column="1" />
     </Grid>
 </Window>

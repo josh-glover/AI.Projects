@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Project1Glover.Utilities;
+﻿using AI.Projects.Project1.Utilities;
+using System.Collections.Generic;
 
-namespace Project1Glover.Models
+namespace AI.Projects.Project1.Models
 {
     public class Trip
     {

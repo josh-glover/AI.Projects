@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{01720AFF-E52B-4D25-9178-E0D7BC5A6E46}</ProjectGuid>
+    <ProjectGuid>{3356EE70-40AD-4A75-B577-224797A99F4B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AI.Projects.Shared</RootNamespace>
-    <AssemblyName>AI.Projects.Shared</AssemblyName>
+    <RootNamespace>AI.Projects.Project2</RootNamespace>
+    <AssemblyName>AI.Projects.Project2</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,11 +41,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BreadthFirstSolver.cs" />
-    <Compile Include="Interfaces\ISolver.cs" />
-    <Compile Include="Models\City.cs" />
-    <Compile Include="Models\Trip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\CityExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AI.Projects.Shared\AI.Projects.Shared.csproj">
+      <Project>{01720AFF-E52B-4D25-9178-E0D7BC5A6E46}</Project>
+      <Name>AI.Projects.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestFiles\11PointDFSBFS.tsp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

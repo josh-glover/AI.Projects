@@ -7,7 +7,7 @@ namespace AI.Projects.UI
     public class Bootstrapper : BootstrapperBase
     {
         public Bootstrapper()
-        {
+        {        
             Initialize();
         }
 

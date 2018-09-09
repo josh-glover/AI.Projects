@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using AI.Projects.Project1.Models;
 using Caliburn.Micro;
 using Microsoft.Win32;
-using Project1Glover.Models;
 
 namespace AI.Projects.UI.Views
 {
