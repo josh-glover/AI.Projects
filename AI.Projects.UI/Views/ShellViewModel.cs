@@ -15,7 +15,7 @@ namespace AI.Projects.UI.Views
 
         public bool ProjectOne
         {
-            get { return _projectOne; }
+            get => _projectOne;
             set
             {
                 if (_projectOne == value) return;
@@ -28,7 +28,7 @@ namespace AI.Projects.UI.Views
 
         public bool ProjectTwo
         {
-            get { return _projectTwo; }
+            get => _projectTwo;
             set
             {
                 if (_projectTwo == value) return;
