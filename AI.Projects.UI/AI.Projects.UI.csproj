@@ -80,7 +80,9 @@
     <Compile Include="Views\ProjectTwoView.xaml.cs">
       <DependentUpon>ProjectTwoView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProjectTwoViewModel.cs" />
+    <Compile Include="Views\ProjectTwoViewModel.cs">
+      <DependentUpon>ProjectTwoView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -139,7 +141,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AI.Projects.Shared\AI.Projects.Shared.csproj">
+    <ProjectReference Include="..\AI.Projects.Project2\AI.Projects.Project2.csproj">
+      <Project>{3356EE70-40AD-4A75-B577-224797A99F4B}</Project>
+      <Name>AI.Projects.Project2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AI.Projects.Shared\AI.Projects.Shared.csproj">
       <Project>{01720AFF-E52B-4D25-9178-E0D7BC5A6E46}</Project>
       <Name>AI.Projects.Shared</Name>
     </ProjectReference>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AI.Projects.Project1.Models
+namespace AI.Projects.Shared.Models
 {
     public class City
     {
@@ -32,6 +32,7 @@ namespace AI.Projects.Project1.Models
             Index = index;
             XPosition = x;
             YPosition = y;
+            Routes = new List<City>();
         }
 
         /// <summary>

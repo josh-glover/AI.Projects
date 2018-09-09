@@ -34,10 +34,32 @@
         <TabControl Margin="0 5 0 0"
                     Grid.Row="1">
             <TabItem Header="Breadth First Search (BFS)">
-                <TextBlock Text="Not Implemented" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Visuals Not Implemented"
+                               Grid.Row="0" />
+                    <Button x:Name="GetBFSResult"
+                            Content="Get Shortest Path"
+                            Grid.Row="1" />
+                </Grid>
             </TabItem>
             <TabItem Header="Depth First Search (DFS)">
-                <TextBlock Text="Not Implemented" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Visuals Not Implemented"
+                               Grid.Row="0" />
+                    <Button x:Name="GetDFSResult"
+                            Content="Get Shortest Path"
+                            Grid.Row="1" />
+                </Grid>
             </TabItem>
             <TabItem Header="Settings"
                      Width="120">

@@ -1,4 +1,4 @@
-﻿using AI.Projects.Project1.Models;
+﻿using AI.Projects.Shared.Models;
 using System.Collections.Generic;
 
 namespace AI.Projects.Shared.Interfaces
@@ -7,6 +7,8 @@ namespace AI.Projects.Shared.Interfaces
     {
         City Origin { get; set; }
         List<City> Destinations { get; set; }
+
+        void OrderData(List<City> cities);
         void GetShortestPath();
     }
 }

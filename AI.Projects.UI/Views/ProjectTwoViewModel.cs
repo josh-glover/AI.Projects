@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
-using AI.Projects.Project1.Models;
+using AI.Projects.Project2;
+using AI.Projects.Shared.Models;
 using Caliburn.Micro;
 using Microsoft.Win32;
 
@@ -10,9 +11,23 @@ namespace AI.Projects.UI.Views
 {
     public class ProjectTwoViewModel : Screen
     {
+
+        public BreadthFirstSolver BFSolver { get; set; }
+        public DepthFirstSolver DfSolver { get; set; }
         public FileInfo CurrentFile { get; set; }
-        public City Origin { get; set; }
-        public List<City> Destinations { get; set; }
+        public List<City> Cities { get; set; }
+
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public ProjectTwoViewModel()
+        {
+            BFSolver = new BreadthFirstSolver();
+            DfSolver = new DepthFirstSolver();
+
+            Cities = new List<City>();
+        }
+
         /// <summary>
         /// A method called by the UI to open a file dialog and select a test file
         /// </summary>
@@ -21,7 +36,7 @@ namespace AI.Projects.UI.Views
             // Set the initial propertys for the file dialog
             var fileDialog = new OpenFileDialog
             {
-                InitialDirectory = Path.GetFullPath("..\\"),
+                InitialDirectory = Path.GetFullPath("..\\..\\..\\AI.Projects.Project2\\TestFiles"),
                 CheckFileExists = true,
                 CheckPathExists = true,
                 Filter = "Test Files | *.tsp"
@@ -49,12 +64,32 @@ namespace AI.Projects.UI.Views
             NotifyOfPropertyChange(nameof(CurrentFile));
 
             // Read the file to get city information
-            GetCities();
+            ReadFile();
         }
+
+        /// <summary>
+        /// A method called by the UI to get the result of the breadth first search
+        /// </summary>
+        public void GetBFSResult()
+        {
+            if (CurrentFile != null)
+                BFSolver.GetShortestPath();
+        }
+
+        /// <summary>
+        /// A method called by the UI to get the result of the depth first search
+        /// </summary>
+        public void GetDFSResult()
+        {
+            if (CurrentFile != null)
+                DfSolver.GetShortestPath();
+        }
+
+
         /// <summary>
         /// A method that reads the cities from the current file
         /// </summary>
-        private void GetCities()
+        private void ReadFile()
         {
             // Makes sure the file is valid
             if (CurrentFile != null && !CurrentFile.Exists)
@@ -63,10 +98,6 @@ namespace AI.Projects.UI.Views
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
-            // Clear any previous data
-            Origin = null;
-            Destinations.Clear();
 
             StreamReader reader = new StreamReader(CurrentFile.FullName);
 
@@ -82,21 +113,16 @@ namespace AI.Projects.UI.Views
             for (int y = 0; y < 2; y++)
                 reader.ReadLine();
 
-            // Read the data for the origin city
-            temp = reader.ReadLine().Split(' ');
-            Origin = new City(int.Parse(temp[0]),
-                double.Parse(temp[1]),
-                double.Parse(temp[2]));
-
             // Read the data for each city
-            for (int z = 0; z < cityCount - 1; z++)
+            for (int z = 0; z < cityCount; z++)
             {
                 temp = reader.ReadLine().Split(' ');
-                Destinations.Add(new City(int.Parse(temp[0]),
-                    double.Parse(temp[1]),
-                    double.Parse(temp[2])));
+                Cities.Add(new City(int.Parse(temp[0]),
+                                    double.Parse(temp[1]),
+                                    double.Parse(temp[2])));
             }
-        }
 
+            BFSolver.OrderData(Cities);
+        }
     }
 }

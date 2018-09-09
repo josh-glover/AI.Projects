@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BreadthFirstSolver.cs" />
     <Compile Include="Interfaces\ISolver.cs" />
     <Compile Include="Models\City.cs" />
     <Compile Include="Models\Trip.cs" />

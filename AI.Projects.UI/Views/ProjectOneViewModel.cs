@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using AI.Projects.Project1.Models;
+using AI.Projects.Shared.Models;
 using Caliburn.Micro;
 using Microsoft.Win32;
 
@@ -49,7 +49,7 @@ namespace AI.Projects.UI.Views
             // Set the initial propertys for the file dialog
             var fileDialog = new OpenFileDialog
             {
-                InitialDirectory = Path.GetFullPath("..\\..\\Test Files"),
+                InitialDirectory = Path.GetFullPath("..\\..\\..\\AI.Projects.Project1\\TestFiles"),
                 CheckFileExists = true,
                 CheckPathExists = true,
                 Filter = "Test Files | *.tsp"

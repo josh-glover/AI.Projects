@@ -1,25 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using AI.Projects.Shared.Utilities;
 using AI.Projects.Shared.Interfaces;
 using AI.Projects.Shared.Models;
 
 namespace AI.Projects.Project2
 {
-    public class BreadthFirstSolver : ISolver
+    public class DepthFirstSolver : ISolver
     {
         public City Origin { get; set; }
         public List<City> Destinations { get; set; }
         public City Goal { get; set; }
-        public List<City> VisitedCities { get; set; }
-        public Queue<City> PathQueue { get; set; }
-
-        public BreadthFirstSolver()
-        {
-            PathQueue = new Queue<City>();
-            VisitedCities = new List<City>();
-        }
 
         public void OrderData(List<City> cities)
         {
@@ -65,38 +55,7 @@ namespace AI.Projects.Project2
 
         public void GetShortestPath()
         {
-            string result;
-            Dictionary<City, double> routeOptions = new Dictionary<City, double>();
-            
-            City currentCity = Origin;
-            VisitedCities.Add(currentCity);
-
-            foreach (City route in currentCity.Routes)
-                routeOptions.Add(route, currentCity.DistanceTo(route));
-
-            routeOptions = routeOptions.OrderBy(r => r.Value).ToDictionary(r => r.Key, r => r.Value);
-            foreach (KeyValuePair<City, double> city in routeOptions)
-                if(!VisitedCities.Contains(city.Key))
-                    PathQueue.Enqueue(city.Key);
-
-            while (PathQueue.Count != 0)
-            {
-                currentCity = PathQueue.Dequeue();
-                VisitedCities.Add(currentCity);
-                routeOptions.Clear();
-
-                foreach (City route in currentCity.Routes)
-                    routeOptions.Add(route, currentCity.DistanceTo(route));
-
-                foreach (KeyValuePair<City, double> city in routeOptions.OrderBy(r => r.Value))
-                    if (!VisitedCities.Contains(city.Key) && !PathQueue.Contains(city.Key))
-                        PathQueue.Enqueue(city.Key);
-            }
-
-            result = "";
-            foreach (City city in VisitedCities)
-                result += $"{city.Index} ";
-            MessageBox.Show(result);
+            throw new System.NotImplementedException();
         }
     }
 }

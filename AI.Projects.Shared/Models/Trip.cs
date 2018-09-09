@@ -1,7 +1,7 @@
-﻿using AI.Projects.Project1.Utilities;
+﻿using AI.Projects.Shared.Utilities;
 using System.Collections.Generic;
 
-namespace AI.Projects.Project1.Models
+namespace AI.Projects.Shared.Models
 {
     public class Trip
     {

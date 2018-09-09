@@ -1,7 +1,8 @@
 ﻿using System;
-using AI.Projects.Project1.Models;
+using System.Collections.Generic;
+using AI.Projects.Shared.Models;
 
-namespace AI.Projects.Project1.Utilities
+namespace AI.Projects.Shared.Utilities
 {
     public static class CityExtensions
     {
