@@ -1,5 +1,6 @@
 ﻿using AI.Projects.Shared.Utilities;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 namespace AI.Projects.Shared.Models
 {
@@ -15,20 +16,19 @@ namespace AI.Projects.Shared.Models
         /// </summary>
         /// <param name="origin">The origin city</param>
         /// <param name="dest">The cities that are visited in the route</param>
-        public Trip(City origin, List<City> dest)
+        public Trip(City origin, List<City> dest, bool cycle)
         {
-            // Initialize the list
-            Stops = new List<City>();
+            // Initialize the list and origin to the start
+            Stops = new List<City> { origin };
 
-            // Add the origin to the start
-            Stops.Add(origin);
 
             // Add each destination for this permutation
             foreach (City city in dest)
                 Stops.Add(city);
 
             // Add the origin to the end to complete the cycle
-            Stops.Add(origin);
+            if(cycle)
+                Stops.Add(origin);
         }
 
         /// <summary>
@@ -46,6 +46,18 @@ namespace AI.Projects.Shared.Models
 
             // Return the total distance
             return distance;
+        }
+
+        public override string ToString()
+        {
+            string result = "";
+            foreach (City stop in Stops)
+            {
+                result += $"{stop.Index} ";
+            }
+
+            result += $"{GetDistance()}";
+            return result;
         }
     }
 }

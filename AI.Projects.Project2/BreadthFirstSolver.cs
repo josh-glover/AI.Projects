@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using AI.Projects.Shared.Utilities;
 using AI.Projects.Shared.Interfaces;
 using AI.Projects.Shared.Models;
 
@@ -9,16 +9,18 @@ namespace AI.Projects.Project2
 {
     public class BreadthFirstSolver : ISolver
     {
+        public Stopwatch Clock { get; set; }
         public City Origin { get; set; }
         public List<City> Destinations { get; set; }
         public City Goal { get; set; }
-        public List<City> VisitedCities { get; set; }
-        public Queue<City> PathQueue { get; set; }
+        public Queue<Vertex> CityQueue { get; set; }
+        public List<Vertex> VisitedCities { get; set; }
 
         public BreadthFirstSolver()
         {
-            PathQueue = new Queue<City>();
-            VisitedCities = new List<City>();
+            Clock = new Stopwatch();
+            CityQueue = new Queue<Vertex>();
+            VisitedCities = new List<Vertex>();
         }
 
         public void OrderData(List<City> cities)
@@ -65,38 +67,49 @@ namespace AI.Projects.Project2
 
         public void GetShortestPath()
         {
-            string result;
-            Dictionary<City, double> routeOptions = new Dictionary<City, double>();
-            
-            City currentCity = Origin;
-            VisitedCities.Add(currentCity);
+            // Initialize for new calculations
+            VisitedCities.Clear();
+            Vertex tempVertex;
 
-            foreach (City route in currentCity.Routes)
-                routeOptions.Add(route, currentCity.DistanceTo(route));
+            Clock.Start();
 
-            routeOptions = routeOptions.OrderBy(r => r.Value).ToDictionary(r => r.Key, r => r.Value);
-            foreach (KeyValuePair<City, double> city in routeOptions)
-                if(!VisitedCities.Contains(city.Key))
-                    PathQueue.Enqueue(city.Key);
-
-            while (PathQueue.Count != 0)
+            Vertex currentCity = new Vertex
             {
-                currentCity = PathQueue.Dequeue();
-                VisitedCities.Add(currentCity);
-                routeOptions.Clear();
+                Point = Origin,
+                Parent = null
+            };
+            VisitedCities.Add(currentCity);
+            CityQueue.Enqueue(currentCity);
 
-                foreach (City route in currentCity.Routes)
-                    routeOptions.Add(route, currentCity.DistanceTo(route));
+            while (CityQueue.Count != 0)
+            {
+                currentCity = CityQueue.Dequeue();
 
-                foreach (KeyValuePair<City, double> city in routeOptions.OrderBy(r => r.Value))
-                    if (!VisitedCities.Contains(city.Key) && !PathQueue.Contains(city.Key))
-                        PathQueue.Enqueue(city.Key);
+                foreach (City route in currentCity.Point.Routes)
+                {
+                    if (VisitedCities.Select(v => v.Point).Contains(route)) continue;
+
+                    tempVertex = new Vertex
+                    {
+                        Point = route,
+                        Parent = currentCity.Point
+                    };
+                    CityQueue.Enqueue(tempVertex);
+                    VisitedCities.Add(tempVertex);
+                }
             }
 
-            result = "";
-            foreach (City city in VisitedCities)
-                result += $"{city.Index} ";
-            MessageBox.Show(result);
+            List<City> cities = new List<City>();
+            while (currentCity.Parent != null)
+            {
+                cities.Add(currentCity.Point);
+                currentCity = VisitedCities.FirstOrDefault(c => c.Point == currentCity.Parent);
+            }
+            var shortestPath = new Trip(Origin, cities.OrderBy(c => c.Index).ToList(), false);
+
+            Clock.Stop();
+            MessageBox.Show($"Time: {Clock.Elapsed}\n" +
+                            $"Path: {shortestPath}");
         }
     }
 }

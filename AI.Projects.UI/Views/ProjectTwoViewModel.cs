@@ -13,7 +13,7 @@ namespace AI.Projects.UI.Views
     {
 
         public BreadthFirstSolver BFSolver { get; set; }
-        public DepthFirstSolver DfSolver { get; set; }
+        public DepthFirstSolver DFSolver { get; set; }
         public FileInfo CurrentFile { get; set; }
         public List<City> Cities { get; set; }
 
@@ -23,7 +23,7 @@ namespace AI.Projects.UI.Views
         public ProjectTwoViewModel()
         {
             BFSolver = new BreadthFirstSolver();
-            DfSolver = new DepthFirstSolver();
+            DFSolver = new DepthFirstSolver();
 
             Cities = new List<City>();
         }
@@ -72,6 +72,8 @@ namespace AI.Projects.UI.Views
         /// </summary>
         public void GetBFSResult()
         {
+            BFSolver.OrderData(Cities);
+
             if (CurrentFile != null)
                 BFSolver.GetShortestPath();
         }
@@ -81,8 +83,10 @@ namespace AI.Projects.UI.Views
         /// </summary>
         public void GetDFSResult()
         {
+            DFSolver.OrderData(Cities);
+
             if (CurrentFile != null)
-                DfSolver.GetShortestPath();
+                DFSolver.GetShortestPath();
         }
 
 
@@ -121,8 +125,6 @@ namespace AI.Projects.UI.Views
                                     double.Parse(temp[1]),
                                     double.Parse(temp[2])));
             }
-
-            BFSolver.OrderData(Cities);
         }
     }
 }

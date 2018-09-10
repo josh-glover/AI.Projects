@@ -101,7 +101,7 @@ namespace AI.Projects.UI.Views
             if (result.Count == Destinations.Count)
             {
                 // Adds this permutation to the list
-                Paths.Add(new Trip(Origin, result));
+                Paths.Add(new Trip(Origin, result, true));
                 return;
             }
 

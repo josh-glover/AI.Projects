@@ -1,15 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using AI.Projects.Shared.Interfaces;
 using AI.Projects.Shared.Models;
+using AI.Projects.Shared.Utilities;
 
 namespace AI.Projects.Project2
 {
     public class DepthFirstSolver : ISolver
     {
+        public Stopwatch Clock { get; set; }
         public City Origin { get; set; }
         public List<City> Destinations { get; set; }
         public City Goal { get; set; }
+        public List<Vertex> VisitedCities { get; set; }
+        public Stack<Vertex> CityStack { get; set; }
+
+        public DepthFirstSolver()
+        {
+            Clock = new Stopwatch();
+            VisitedCities = new List<Vertex>();
+            CityStack = new Stack<Vertex>();
+        }
 
         public void OrderData(List<City> cities)
         {
@@ -55,7 +68,51 @@ namespace AI.Projects.Project2
 
         public void GetShortestPath()
         {
-            throw new System.NotImplementedException();
+            // Initialize for new calculations
+            VisitedCities.Clear();
+            Vertex tempVertex;
+
+            Clock.Start();
+
+            Vertex currentCity = new Vertex
+            {
+                Point = Origin,
+                Parent = null
+            };
+            CityStack.Push(currentCity);
+            VisitedCities.Add(currentCity);
+
+            while (CityStack.Count != 0)
+            {
+                currentCity = CityStack.Pop();
+
+                if (currentCity.Point == Goal) break;
+
+                foreach (City route in currentCity.Point.Routes)
+                {
+                    if (VisitedCities.Select(v => v.Point).Contains(route)) continue;
+
+                    tempVertex = new Vertex
+                    {
+                        Point = route,
+                        Parent = currentCity.Point
+                    };
+                    CityStack.Push(tempVertex);
+                    VisitedCities.Add(tempVertex);
+                }
+            }
+
+            List<City> cities = new List<City>();
+            while (currentCity.Parent != null)
+            {
+                cities.Add(currentCity.Point);
+                currentCity = VisitedCities.FirstOrDefault(c => c.Point == currentCity.Parent);
+            }
+            var shortestPath = new Trip(Origin, cities.OrderBy(c => c.Index).ToList(), false);
+
+            Clock.Stop();
+            MessageBox.Show($"Time: {Clock.Elapsed}\n" +
+                            $"Path: {shortestPath}");
         }
     }
 }
