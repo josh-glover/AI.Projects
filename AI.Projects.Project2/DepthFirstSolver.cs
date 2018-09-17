@@ -4,26 +4,50 @@ using System.Linq;
 using System.Windows;
 using AI.Projects.Shared.Interfaces;
 using AI.Projects.Shared.Models;
-using AI.Projects.Shared.Utilities;
 
 namespace AI.Projects.Project2
 {
     public class DepthFirstSolver : ISolver
     {
+        /// <summary>
+        /// A property used to store the clock that times the runtime of the solver
+        /// </summary>
         public Stopwatch Clock { get; set; }
+        /// <summary>
+        /// A property that stores the starting point of the path
+        /// </summary>
         public City Origin { get; set; }
+        /// <summary>
+        /// A property that stores a list of the points that can be visited
+        /// </summary>
         public List<City> Destinations { get; set; }
+        /// <summary>
+        /// A property that stores the ending point of the path
+        /// </summary>
         public City Goal { get; set; }
-        public List<Vertex> VisitedCities { get; set; }
+        /// <summary>
+        /// A property that stores a stack that evaluates the routes to be taken in DFS
+        /// </summary>
         public Stack<Vertex> CityStack { get; set; }
+        /// <summary>
+        /// A property that stores a list of the cities visited during the search
+        /// </summary>
+        public List<Vertex> VisitedCities { get; set; }
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public DepthFirstSolver()
         {
             Clock = new Stopwatch();
-            VisitedCities = new List<Vertex>();
             CityStack = new Stack<Vertex>();
+            VisitedCities = new List<Vertex>();
         }
 
+        /// <summary>
+        /// A method that parses a list of cities into properties used by the solver
+        /// </summary>
+        /// <param name="cities">The cities to be parsed</param>
         public void OrderData(List<City> cities)
         {
             // Validate that there are more than 3 cities
@@ -66,14 +90,19 @@ namespace AI.Projects.Project2
             Destinations[8].Routes.Add(Goal);               // From 10 to 11
         }
 
+        /// <summary>
+        /// A method that runs the solver to get the result
+        /// </summary>
         public void GetShortestPath()
         {
             // Initialize for new calculations
             VisitedCities.Clear();
             Vertex tempVertex;
 
+            // Start the timer
             Clock.Start();
 
+            // Set the initial city into the stack
             Vertex currentCity = new Vertex
             {
                 Point = Origin,
@@ -82,16 +111,22 @@ namespace AI.Projects.Project2
             CityStack.Push(currentCity);
             VisitedCities.Add(currentCity);
 
+            // Iterate as long as there is a city in the stack
             while (CityStack.Count != 0)
             {
+                // Get the next city in the stack
                 currentCity = CityStack.Pop();
 
+                // If the goal is found, then end the search
                 if (currentCity.Point == Goal) break;
 
+                // Iterate for each route a city can take to another
                 foreach (City route in currentCity.Point.Routes)
                 {
+                    // If the city is a duplicate, skip this iteration
                     if (VisitedCities.Select(v => v.Point).Contains(route)) continue;
 
+                    // If its a new city add it to the stack
                     tempVertex = new Vertex
                     {
                         Point = route,
@@ -102,6 +137,7 @@ namespace AI.Projects.Project2
                 }
             }
 
+            // Trace back the shortest path
             List<City> cities = new List<City>();
             while (currentCity.Parent != null)
             {
@@ -110,6 +146,7 @@ namespace AI.Projects.Project2
             }
             var shortestPath = new Trip(Origin, cities.OrderBy(c => c.Index).ToList(), false);
 
+            // Stop the timer and display the result
             Clock.Stop();
             MessageBox.Show($"Time: {Clock.Elapsed}\n" +
                             $"Path: {shortestPath}");

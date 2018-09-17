@@ -11,10 +11,21 @@ namespace AI.Projects.UI.Views
 {
     public class ProjectTwoViewModel : Screen
     {
-
+        /// <summary>
+        /// A property that holds a solver agent to run the breadth first search algorithm
+        /// </summary>
         public BreadthFirstSolver BFSolver { get; set; }
+        /// <summary>
+        /// A property that holds a solver agent to run the depth first search algorithm
+        /// </summary>
         public DepthFirstSolver DFSolver { get; set; }
+        /// <summary>
+        /// A property that stores the file being used for information
+        /// </summary>
         public FileInfo CurrentFile { get; set; }
+        /// <summary>
+        /// A property that stores a list of the points to be sent to a solver
+        /// </summary>
         public List<City> Cities { get; set; }
 
         /// <summary>
@@ -88,7 +99,6 @@ namespace AI.Projects.UI.Views
             if (CurrentFile != null)
                 DFSolver.GetShortestPath();
         }
-
 
         /// <summary>
         /// A method that reads the cities from the current file

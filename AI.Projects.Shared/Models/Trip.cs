@@ -27,7 +27,7 @@ namespace AI.Projects.Shared.Models
                 Stops.Add(city);
 
             // Add the origin to the end to complete the cycle
-            if(cycle)
+            if (cycle)
                 Stops.Add(origin);
         }
 
@@ -48,6 +48,10 @@ namespace AI.Projects.Shared.Models
             return distance;
         }
 
+        /// <summary>
+        /// An overrided method to print readable string of the stops
+        /// </summary>
+        /// <returns>A readable string of the stops</returns>
         public override string ToString()
         {
             string result = "";
