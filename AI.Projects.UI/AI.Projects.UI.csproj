@@ -44,6 +44,9 @@
     <Reference Include="Caliburn.Micro.Platform.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
+    <Reference Include="DynamicDataDisplay, Version=0.3.0.1, Culture=neutral, PublicKeyToken=5b7d744a7263923f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicDataDisplay.0.3.0.1\lib\net45\DynamicDataDisplay.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -76,6 +79,12 @@
     </Compile>
     <Compile Include="Views\ProjectOneViewModel.cs">
       <DependentUpon>ProjectOneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProjectThreeView.xaml.cs">
+      <DependentUpon>ProjectThreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProjectThreeViewModel.cs">
+      <DependentUpon>ProjectThreeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProjectTwoView.xaml.cs">
       <DependentUpon>ProjectTwoView.xaml</DependentUpon>
@@ -131,6 +140,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ProjectThreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ProjectTwoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,10 +158,17 @@
       <Project>{3356EE70-40AD-4A75-B577-224797A99F4B}</Project>
       <Name>AI.Projects.Project2</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AI.Projects.Project3\AI.Projects.Project3.csproj">
+      <Project>{DD8993E4-9802-420B-A416-504AFD1EF8AD}</Project>
+      <Name>AI.Projects.Project3</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AI.Projects.Shared\AI.Projects.Shared.csproj">
       <Project>{01720AFF-E52B-4D25-9178-E0D7BC5A6E46}</Project>
       <Name>AI.Projects.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

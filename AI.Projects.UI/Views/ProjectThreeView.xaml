@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="AI.Projects.UI.Views.ProjectThreeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AI.Projects.UI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="450">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Test File"
+                  Grid.Row="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding CurrentFile.Name, Mode=OneWay}"
+                           VerticalAlignment="Center"
+                           Margin="2.5"
+                           Grid.Column="0" />
+                <Button x:Name="BrowseFiles"
+                        Content="Browse"
+                        Margin="2.5"
+                        Grid.Column="1" />
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</UserControl>

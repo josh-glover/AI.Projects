@@ -7,6 +7,7 @@ namespace AI.Projects.UI.Views
         // Fields
         private bool _projectOne;
         private bool _projectTwo;
+        private bool _projectThree;
 
         /// <summary>
         /// Default Constructor
@@ -47,11 +48,25 @@ namespace AI.Projects.UI.Views
 
                 _projectTwo = value;
 
-                // If set to true, display the view for project one 
+                // If set to true, display the view for project two
                 if (value)
                     ActivateItem(new ProjectTwoViewModel());
             }
         }
 
+        public bool ProjectThree
+        {
+            get => _projectThree;
+            set
+            {
+                if (_projectThree == value) return;
+
+                _projectThree = value;
+
+                // If set to true, display the view for project three
+                if (value)
+                    ActivateItem(new ProjectThreeViewModel());
+            }
+        }
     }
 }
