@@ -6,6 +6,8 @@ using AI.Projects.Project3;
 using AI.Projects.Shared.Models;
 using Caliburn.Micro;
 using Microsoft.Win32;
+using OxyPlot;
+using OxyPlot.Series;
 
 namespace AI.Projects.UI.Views
 {
@@ -24,12 +26,21 @@ namespace AI.Projects.UI.Views
         /// </summary>
         public List<City> Cities { get; set; }
 
+        public PlotModel PlotInfo { get; set; }
+
+        public LineSeries PlotSeries { get; set; }
+
         /// <summary>
         /// Default Constructor
         /// </summary>
         public ProjectThreeViewModel()
         {
             Cities = new List<City>();
+            PlotInfo = new PlotModel();
+            PlotSeries = new LineSeries();
+            PlotInfo.Series.Add(PlotSeries);
+            CESolver = new ClosestEdgeSolver();
+            CESolver.CityAdded += OnCityAdded;
         }
 
         /// <summary>
@@ -71,11 +82,17 @@ namespace AI.Projects.UI.Views
             ReadFile();
         }
 
+        public void AddCity()
+        {
+            CESolver.AddClosestCity();
+        }
+
         /// <summary>
         /// A method that reads the cities from the current file
         /// </summary>
         private void ReadFile()
         {
+            PlotSeries.Points.Clear();
             // Makes sure the file is valid
             if (CurrentFile != null && !CurrentFile.Exists)
             {
@@ -102,10 +119,19 @@ namespace AI.Projects.UI.Views
             for (int z = 0; z < cityCount; z++)
             {
                 temp = reader.ReadLine().Split(' ');
-                Cities.Add(new City(int.Parse(temp[0]),
+                var city = new City(int.Parse(temp[0]),
                                     double.Parse(temp[1]),
-                                    double.Parse(temp[2])));
+                                    double.Parse(temp[2]));
+                Cities.Add(city);
             }
+
+            CESolver.OrderData(Cities);
+        }
+
+        private void OnCityAdded(object sender, CityAddedEventArgs args)
+        {
+            PlotSeries.Points.Add(new DataPoint(args.AddedCity.XPosition, args.AddedCity.YPosition));
+            PlotInfo.InvalidatePlot(true);
         }
     }
 }
