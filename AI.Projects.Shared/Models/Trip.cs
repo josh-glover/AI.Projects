@@ -20,8 +20,7 @@ namespace AI.Projects.Shared.Models
         {
             // Initialize the list and origin to the start
             Stops = new List<City> { origin };
-
-
+            
             // Add each destination for this permutation
             foreach (City city in dest)
                 Stops.Add(city);
@@ -29,6 +28,11 @@ namespace AI.Projects.Shared.Models
             // Add the origin to the end to complete the cycle
             if (cycle)
                 Stops.Add(origin);
+        }
+
+        public Trip(List<City> stops)
+        {
+            Stops = stops;
         }
 
         /// <summary>
@@ -60,7 +64,7 @@ namespace AI.Projects.Shared.Models
                 result += $"{stop.Index} ";
             }
 
-            result += $"{GetDistance()}";
+            result += $"\n Distance: {GetDistance()}";
             return result;
         }
     }

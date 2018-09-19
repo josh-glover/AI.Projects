@@ -13,6 +13,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <GroupBox Header="Test File"
                   Grid.Row="0">
@@ -33,11 +36,31 @@
         </GroupBox>
 
         <oxy:PlotView Model="{Binding PlotInfo}"
-                      Grid.Row="1"/>
+                      Grid.Row="1" />
 
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="2">
+            <TextBlock Text="Order Added:" />
+            <ItemsControl ItemsSource="{Binding AddedOrder}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Index}"
+                                   Margin="2" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
         <Button x:Name="AddCity"
                 Content="Add Closest City"
-                Grid.Row="2" />
+                Grid.Row="3" />
+        <Button x:Name="QuickSolve"
+                Content="Add All"
+                Grid.Row="5" />
     </Grid>
 </UserControl>
 

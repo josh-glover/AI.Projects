@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using AI.Projects.Project3;
@@ -26,8 +27,9 @@ namespace AI.Projects.UI.Views
         /// </summary>
         public List<City> Cities { get; set; }
 
+        public ObservableCollection<City> AddedOrder { get; set; }
         public PlotModel PlotInfo { get; set; }
-
+        public ScatterSeries CitySeries { get; set; }
         public LineSeries PlotSeries { get; set; }
 
         /// <summary>
@@ -36,11 +38,15 @@ namespace AI.Projects.UI.Views
         public ProjectThreeViewModel()
         {
             Cities = new List<City>();
+            AddedOrder = new ObservableCollection<City>();
             PlotInfo = new PlotModel();
+            CitySeries = new ScatterSeries();
             PlotSeries = new LineSeries();
             PlotInfo.Series.Add(PlotSeries);
+            PlotInfo.Series.Add(CitySeries);            
             CESolver = new ClosestEdgeSolver();
             CESolver.CityAdded += OnCityAdded;
+            CESolver.DataCleared += OnDataCleared;
         }
 
         /// <summary>
@@ -92,7 +98,7 @@ namespace AI.Projects.UI.Views
         /// </summary>
         private void ReadFile()
         {
-            PlotSeries.Points.Clear();
+            Cities.Clear();
             // Makes sure the file is valid
             if (CurrentFile != null && !CurrentFile.Exists)
             {
@@ -123,6 +129,7 @@ namespace AI.Projects.UI.Views
                                     double.Parse(temp[1]),
                                     double.Parse(temp[2]));
                 Cities.Add(city);
+                CitySeries.Points.Add(new ScatterPoint(city.XPosition, city.YPosition));
             }
 
             CESolver.OrderData(Cities);
@@ -130,7 +137,20 @@ namespace AI.Projects.UI.Views
 
         private void OnCityAdded(object sender, CityAddedEventArgs args)
         {
-            PlotSeries.Points.Add(new DataPoint(args.AddedCity.XPosition, args.AddedCity.YPosition));
+            AddedOrder.Add(args.AddedCity);
+
+            var point = new DataPoint(args.AddedCity.XPosition, args.AddedCity.YPosition);
+            PlotSeries.Points.Insert(args.Index, point);
+
+            NotifyOfPropertyChange(nameof(AddedOrder));
+            PlotInfo.InvalidatePlot(true);
+        }
+
+        private void OnDataCleared(object sender, EventArgs args)
+        {
+            AddedOrder.Clear();
+            PlotSeries.Points.Clear();
+            
             PlotInfo.InvalidatePlot(true);
         }
     }
