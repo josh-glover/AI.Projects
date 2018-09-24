@@ -12,7 +12,7 @@ using OxyPlot.Series;
 
 namespace AI.Projects.UI.Views
 {
-    class ProjectThreeViewModel : Screen
+    public class ProjectThreeViewModel : Screen
     {
         /// <summary>
         /// A property that stores the solver that will perform the closest edge algorithm
@@ -26,10 +26,21 @@ namespace AI.Projects.UI.Views
         /// A property that stores a list of the points to be sent to a solver
         /// </summary>
         public List<City> Cities { get; set; }
-
+        /// <summary>
+        /// A property that stores the order that cities are added
+        /// </summary>
         public ObservableCollection<City> AddedOrder { get; set; }
+        /// <summary>
+        /// A property that stores the model to control the graph UI
+        /// </summary>
         public PlotModel PlotInfo { get; set; }
+        /// <summary>
+        /// A property that stores information of the scatter plot
+        /// </summary>
         public ScatterSeries CitySeries { get; set; }
+        /// <summary>
+        /// A property that stores the information of the graph connections
+        /// </summary>
         public LineSeries PlotSeries { get; set; }
 
         /// <summary>
@@ -43,7 +54,7 @@ namespace AI.Projects.UI.Views
             CitySeries = new ScatterSeries();
             PlotSeries = new LineSeries();
             PlotInfo.Series.Add(PlotSeries);
-            PlotInfo.Series.Add(CitySeries);            
+            PlotInfo.Series.Add(CitySeries);
             CESolver = new ClosestEdgeSolver();
             CESolver.CityAdded += OnCityAdded;
             CESolver.DataCleared += OnDataCleared;
@@ -88,6 +99,9 @@ namespace AI.Projects.UI.Views
             ReadFile();
         }
 
+        /// <summary>
+        /// A method called by the UI to add a the closest city to an edge
+        /// </summary>
         public void AddCity()
         {
             CESolver.AddClosestCity();
@@ -98,6 +112,7 @@ namespace AI.Projects.UI.Views
         /// </summary>
         private void ReadFile()
         {
+            CitySeries.Points.Clear();
             Cities.Clear();
             // Makes sure the file is valid
             if (CurrentFile != null && !CurrentFile.Exists)
@@ -128,29 +143,45 @@ namespace AI.Projects.UI.Views
                 var city = new City(int.Parse(temp[0]),
                                     double.Parse(temp[1]),
                                     double.Parse(temp[2]));
+                // Add the city to the list
                 Cities.Add(city);
+
+                // Add the city to the graph
                 CitySeries.Points.Add(new ScatterPoint(city.XPosition, city.YPosition));
             }
 
             CESolver.OrderData(Cities);
         }
 
+        /// <summary>
+        /// A method triggered by the CityAdded event that adds the point to the graph
+        /// </summary>
+        /// <param name="sender">The solver sending the message</param>
+        /// <param name="args">The information about the city added</param>
         private void OnCityAdded(object sender, CityAddedEventArgs args)
         {
+            // Add to the AddedOrder list to keep track of order
             AddedOrder.Add(args.AddedCity);
 
+            // Plot the new point on the graph
             var point = new DataPoint(args.AddedCity.XPosition, args.AddedCity.YPosition);
             PlotSeries.Points.Insert(args.Index, point);
 
+            // Update the UI
             NotifyOfPropertyChange(nameof(AddedOrder));
             PlotInfo.InvalidatePlot(true);
         }
 
+        /// <summary>
+        /// A method triggered by the DataCleared event that clears all point information
+        /// </summary>
+        /// <param name="sender">The solver that sent the event</param>
+        /// <param name="args">The event arguments</param>
         private void OnDataCleared(object sender, EventArgs args)
         {
             AddedOrder.Clear();
             PlotSeries.Points.Clear();
-            
+
             PlotInfo.InvalidatePlot(true);
         }
     }

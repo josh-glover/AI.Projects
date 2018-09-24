@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="CityAddedEventArgs.cs" />
     <Compile Include="ClosestEdgeSolver.cs" />
-    <Compile Include="Enumerations\ClosestEdgeStartType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
