@@ -41,7 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneticSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AI.Projects.Project3\AI.Projects.Project3.csproj">
+      <Project>{DD8993E4-9802-420B-A416-504AFD1EF8AD}</Project>
+      <Name>AI.Projects.Project3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AI.Projects.Shared\AI.Projects.Shared.csproj">
+      <Project>{01720AFF-E52B-4D25-9178-E0D7BC5A6E46}</Project>
+      <Name>AI.Projects.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="TestFiles\Random100.tsp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

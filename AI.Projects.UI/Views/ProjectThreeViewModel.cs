@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using AI.Projects.Project3;
+using AI.Projects.Shared.Events;
 using AI.Projects.Shared.Models;
 using Caliburn.Micro;
 using Microsoft.Win32;

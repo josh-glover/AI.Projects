@@ -1,7 +1,7 @@
 ﻿using System;
 using AI.Projects.Shared.Models;
 
-namespace AI.Projects.Project3
+namespace AI.Projects.Shared.Events
 {
     public class CityAddedEventArgs : EventArgs
     {
