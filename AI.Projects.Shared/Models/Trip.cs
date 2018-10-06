@@ -1,6 +1,6 @@
-﻿using AI.Projects.Shared.Utilities;
+﻿using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using AI.Projects.Shared.Utilities;
 
 namespace AI.Projects.Shared.Models
 {
@@ -9,7 +9,7 @@ namespace AI.Projects.Shared.Models
         /// <summary>
         /// A property that stores the fitness value for the trip
         /// </summary>
-        public int Fitness { get; set; }
+       public double Fitness { get; set; }
 
         /// <summary>
         /// A property that stores all the stops in this permutation of the route
@@ -33,6 +33,8 @@ namespace AI.Projects.Shared.Models
             // Add the origin to the end to complete the cycle
             if (cycle)
                 Stops.Add(origin);
+
+            Fitness = 1 / (GetDistance() + 1);
         }
 
         public Trip(List<City> stops)

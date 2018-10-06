@@ -42,7 +42,7 @@ namespace AI.Projects.UI.Views
         /// <summary>
         /// A property that stores the information of the graph connections
         /// </summary>
-        public LineSeries PlotSeries { get; set; }
+        public LineSeries PathSeries { get; set; }
 
         /// <summary>
         /// Default Constructor
@@ -53,10 +53,11 @@ namespace AI.Projects.UI.Views
             AddedOrder = new ObservableCollection<City>();
             PlotInfo = new PlotModel();
             CitySeries = new ScatterSeries();
-            PlotSeries = new LineSeries();
-            PlotInfo.Series.Add(PlotSeries);
+            PathSeries = new LineSeries();
+            PlotInfo.Series.Add(PathSeries);
             PlotInfo.Series.Add(CitySeries);
             GSolver = new GeneticSolver();
+            GSolver.NewBestTrip += OnNewBestTrip;
         }
 
         /// <summary>
@@ -102,6 +103,7 @@ namespace AI.Projects.UI.Views
                 CitySeries.Points.Add(new ScatterPoint(city.XPosition, city.YPosition));
             }
 
+            PlotInfo.InvalidatePlot(true);
             GSolver.OrderData(Cities);
         }
 
@@ -147,6 +149,16 @@ namespace AI.Projects.UI.Views
         public void StartGeneration()
         {
             GSolver.GetShortestPath();
+        }
+
+        private void OnNewBestTrip(object sender, BestFoundEventArgs args)
+        {
+            PathSeries.Points.Clear();
+
+            foreach (City point in args.NewBest.Stops)
+                PathSeries.Points.Add(new DataPoint(point.XPosition, point.YPosition));
+
+            PlotInfo.InvalidatePlot(true);
         }
     }
 }

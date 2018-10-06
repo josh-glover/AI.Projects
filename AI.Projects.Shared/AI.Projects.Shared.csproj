@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\BestFoundEventArgs.cs" />
     <Compile Include="Events\CityAddedEventArgs.cs" />
     <Compile Include="Interfaces\ISolver.cs" />
     <Compile Include="Models\City.cs" />
