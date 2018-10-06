@@ -7,6 +7,11 @@ namespace AI.Projects.Shared.Models
     public class Trip
     {
         /// <summary>
+        /// A property that stores the fitness value for the trip
+        /// </summary>
+        public int Fitness { get; set; }
+
+        /// <summary>
         /// A property that stores all the stops in this permutation of the route
         /// </summary>
         public List<City> Stops { get; set; }
@@ -20,7 +25,7 @@ namespace AI.Projects.Shared.Models
         {
             // Initialize the list and origin to the start
             Stops = new List<City> { origin };
-            
+
             // Add each destination for this permutation
             foreach (City city in dest)
                 Stops.Add(city);
