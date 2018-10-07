@@ -16,6 +16,10 @@ namespace AI.Projects.UI.Views
     public class ProjectFourViewModel : Screen
     {
         /// <summary>
+        /// A property that stores the running status of the algorithm
+        /// </summary>
+        public bool Running { get; set; }
+        /// <summary>
         /// A property that stores the solver that will perform the genetic algorithm
         /// </summary>
         public GeneticSolver GSolver { get; set; }
@@ -148,7 +152,11 @@ namespace AI.Projects.UI.Views
 
         public void StartGeneration()
         {
+            Running = true;
+            NotifyOfPropertyChange(nameof(Running));
             GSolver.GetShortestPath();
+            Running = false;
+            NotifyOfPropertyChange(nameof(Running));
         }
 
         private void OnNewBestTrip(object sender, BestFoundEventArgs args)

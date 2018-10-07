@@ -80,6 +80,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Core\Converters\InvertedBoolConverter.cs" />
     <Compile Include="Views\ProjectFourView.xaml.cs">
       <DependentUpon>ProjectFourView.xaml</DependentUpon>
     </Compile>
@@ -187,8 +188,6 @@
       <Name>AI.Projects.Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

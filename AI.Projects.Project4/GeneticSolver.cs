@@ -10,6 +10,7 @@ namespace AI.Projects.Project4
     public class GeneticSolver : ISolver
     {
         public EventHandler<BestFoundEventArgs> NewBestTrip { get; set; }
+        public EventHandler<EventArgs> DataCleared;
 
         /// <summary>
         /// A property that stores the starting point of the path

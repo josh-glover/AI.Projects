@@ -47,6 +47,7 @@
 
         <Button x:Name="StartGeneration"
                 Content="Start Generation"
+                IsEnabled="{Binding Running, Converter={StaticResource InvertedBoolConverter}}"
                 Grid.Row="4" />
     </Grid>
 </UserControl>
