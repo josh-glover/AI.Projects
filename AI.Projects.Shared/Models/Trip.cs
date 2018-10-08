@@ -34,12 +34,13 @@ namespace AI.Projects.Shared.Models
             if (cycle)
                 Stops.Add(origin);
 
-            Fitness = 1 / (GetDistance() + 1);
+            Fitness = GetDistance();
         }
 
         public Trip(List<City> stops)
         {
             Stops = stops;
+            Fitness = GetDistance();
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace AI.Projects.Shared.Models
                 result += $"{stop.Index} ";
             }
 
-            result += $"\n Distance: {GetDistance()}";
+            result += $"\n Distance: {GetDistance()}\n Fitness: {Fitness}";
             return result;
         }
     }

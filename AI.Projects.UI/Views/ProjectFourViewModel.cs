@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using AI.Projects.Project4;
 using AI.Projects.Shared.Events;
@@ -16,10 +17,6 @@ namespace AI.Projects.UI.Views
     public class ProjectFourViewModel : Screen
     {
         /// <summary>
-        /// A property that stores the running status of the algorithm
-        /// </summary>
-        public bool Running { get; set; }
-        /// <summary>
         /// A property that stores the solver that will perform the genetic algorithm
         /// </summary>
         public GeneticSolver GSolver { get; set; }
@@ -32,13 +29,17 @@ namespace AI.Projects.UI.Views
         /// </summary>
         public List<City> Cities { get; set; }
         /// <summary>
-        /// A property that stores the order that cities are added
+        /// A property that stores the current best distance
         /// </summary>
-        public ObservableCollection<City> AddedOrder { get; set; }
+        public int BestDistance { get; set; }
         /// <summary>
         /// A property that stores the model to control the graph UI
         /// </summary>
         public PlotModel PlotInfo { get; set; }
+        /// <summary>
+        /// A property that stores the model to control the graph UI
+        /// </summary>
+        public PlotModel ChangeInfo { get; set; }
         /// <summary>
         /// A property that stores information of the scatter plot
         /// </summary>
@@ -47,6 +48,10 @@ namespace AI.Projects.UI.Views
         /// A property that stores the information of the graph connections
         /// </summary>
         public LineSeries PathSeries { get; set; }
+        /// <summary>
+        /// A property that stores the information of the graph changes
+        /// </summary>
+        public LineSeries ChangeSeries { get; set; }
 
         /// <summary>
         /// Default Constructor
@@ -54,14 +59,18 @@ namespace AI.Projects.UI.Views
         public ProjectFourViewModel()
         {
             Cities = new List<City>();
-            AddedOrder = new ObservableCollection<City>();
             PlotInfo = new PlotModel();
+            ChangeInfo = new PlotModel();
             CitySeries = new ScatterSeries();
             PathSeries = new LineSeries();
+            ChangeSeries = new LineSeries();
             PlotInfo.Series.Add(PathSeries);
             PlotInfo.Series.Add(CitySeries);
+            ChangeInfo.Series.Add(ChangeSeries);
+
             GSolver = new GeneticSolver();
             GSolver.NewBestTrip += OnNewBestTrip;
+            GSolver.DataCleared += OnDataCleared;
         }
 
         /// <summary>
@@ -108,6 +117,7 @@ namespace AI.Projects.UI.Views
             }
 
             PlotInfo.InvalidatePlot(true);
+            OnDataCleared(this, new EventArgs());
             GSolver.OrderData(Cities);
         }
 
@@ -150,21 +160,43 @@ namespace AI.Projects.UI.Views
             ReadFile();
         }
 
+        /// <summary>
+        /// A method called by the UI to start generating the paths
+        /// </summary>
         public void StartGeneration()
         {
-            Running = true;
-            NotifyOfPropertyChange(nameof(Running));
-            GSolver.GetShortestPath();
-            Running = false;
-            NotifyOfPropertyChange(nameof(Running));
+            Task.Run(() => { GSolver.GetShortestPath(); });
         }
 
+        /// <summary>
+        /// A method triggered by the NewBestTrip event that updates the new best path
+        /// </summary>
+        /// <param name="sender">The solver that sent the event</param>
+        /// <param name="args">The event arguments</param>
         private void OnNewBestTrip(object sender, BestFoundEventArgs args)
         {
             PathSeries.Points.Clear();
 
             foreach (City point in args.NewBest.Stops)
                 PathSeries.Points.Add(new DataPoint(point.XPosition, point.YPosition));
+
+            ChangeSeries.Points.Add(new DataPoint(args.Generation, 1 / (args.NewBest.Fitness) + 1));
+
+            BestDistance = (int)args.NewBest.GetDistance();
+
+            NotifyOfPropertyChange(nameof(BestDistance));
+            PlotInfo.InvalidatePlot(true);
+            ChangeInfo.InvalidatePlot(true);
+        }
+
+        /// <summary>
+        /// A method triggered by the DataCleared event that clears all point information
+        /// </summary>
+        /// <param name="sender">The solver that sent the event</param>
+        /// <param name="args">The event arguments</param>
+        private void OnDataCleared(object sender, EventArgs args)
+        {
+            PathSeries.Points.Clear();
 
             PlotInfo.InvalidatePlot(true);
         }

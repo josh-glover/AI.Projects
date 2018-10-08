@@ -1,8 +1,8 @@
 ﻿<UserControl x:Class="AI.Projects.UI.Views.ProjectFourView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:AI.Projects.UI.Views"
              xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d"
@@ -38,16 +38,33 @@
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     Grid.Row="1">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="Generation:"></TextBlock>
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Margin="5">
+                <TextBlock Text="Generation:" />
+                <TextBlock Text="{Binding GSolver.Generation}" />
+            </StackPanel>
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Margin="5">
+                <TextBlock Text="Current Distance:" />
+                <TextBlock Text="{Binding BestDistance}" />
             </StackPanel>
         </StackPanel>
-        <oxy:PlotView Model="{Binding PlotInfo}"
-                      Grid.Row="3" />
+
+        <TabControl Grid.Row="3">
+            <TabItem Header="Current Best Path">
+                <oxy:PlotView Model="{Binding PlotInfo}"/>
+            </TabItem>
+            <TabItem Header="Change Graph">
+                <oxy:PlotView Model="{Binding ChangeInfo}" />
+            </TabItem>
+        </TabControl>
 
         <Button x:Name="StartGeneration"
                 Content="Start Generation"
-                IsEnabled="{Binding Running, Converter={StaticResource InvertedBoolConverter}}"
+                IsEnabled="{Binding GSolver.Running, Converter={StaticResource InvertedBoolConverter}}"
                 Grid.Row="4" />
     </Grid>
 </UserControl>
+
