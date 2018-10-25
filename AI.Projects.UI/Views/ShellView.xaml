@@ -29,6 +29,9 @@
             <RadioButton x:Name="ProjectFour"
                          Content="4"
                          Style="{StaticResource SideMenuRadioButtonStyle}" />
+            <RadioButton x:Name="ProjectFive"
+                         Content="5"
+                         Style="{StaticResource SideMenuRadioButtonStyle}" />
         </StackPanel>
         
         <ContentControl x:Name="ActiveItem"

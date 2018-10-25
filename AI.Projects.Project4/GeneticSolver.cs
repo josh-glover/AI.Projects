@@ -115,8 +115,8 @@ namespace AI.Projects.Project4
 
             while (Running)
             {
-                if (Generation == 499999)
-                    Running = false;
+                //if (Generation == 499999)
+                //    Running = false;
 
                 GenerateNewPopulation();
 

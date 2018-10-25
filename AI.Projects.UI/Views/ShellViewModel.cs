@@ -9,6 +9,7 @@ namespace AI.Projects.UI.Views
         private bool _projectTwo;
         private bool _projectThree;
         private bool _projectFour;
+        private bool _projectFive;
 
         /// <summary>
         /// Default Constructor
@@ -91,5 +92,22 @@ namespace AI.Projects.UI.Views
             }
         }
 
+        /// <summary>
+        /// A property that tells the UI if the fifth project is selected
+        /// </summary>
+        public bool ProjectFive
+        {
+            get => _projectFive;
+            set
+            {
+                if (_projectFive == value) return;
+
+                _projectFive = value;
+
+                // If set to true, display the view for project three
+                if (value)
+                    ActivateItem(new ProjectFiveViewModel());
+            }
+        }
     }
 }

@@ -81,6 +81,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\Converters\InvertedBoolConverter.cs" />
+    <Compile Include="Views\ProjectFiveView.xaml.cs">
+      <DependentUpon>ProjectFiveView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProjectFiveViewModel.cs">
+          <DependentUpon>ProjectFiveView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProjectFourView.xaml.cs">
       <DependentUpon>ProjectFourView.xaml</DependentUpon>
     </Compile>
@@ -146,6 +152,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\RadioButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProjectFiveView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
