@@ -16,8 +16,8 @@ namespace AI.Projects.Project4
         private bool _running;
         private int _generation;
         private Trip _best;
-        public event PropertyChangedEventHandler PropertyChanged;
 
+        public event PropertyChangedEventHandler PropertyChanged;
         public EventHandler<BestFoundEventArgs> NewBestTrip { get; set; }
         public EventHandler<EventArgs> DataCleared;
 
@@ -66,6 +66,10 @@ namespace AI.Projects.Project4
             }
         }
         /// <summary>
+        /// A property that tracks the max generation
+        /// </summary>
+        public int MaxGeneration { get; set; }
+        /// <summary>
         /// A property that stores the current size of the population
         /// </summary>
         public int PopulationSize { get; set; }
@@ -80,6 +84,18 @@ namespace AI.Projects.Project4
         public GeneticSolver()
         {
             Running = false;
+            MaxGeneration = 499999;
+            Destinations = new List<City>();
+            Population = new List<Trip>();
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public GeneticSolver(int maxGen)
+        {
+            Running = false;
+            MaxGeneration = maxGen;
             Destinations = new List<City>();
             Population = new List<Trip>();
         }
@@ -115,8 +131,8 @@ namespace AI.Projects.Project4
 
             while (Running)
             {
-                //if (Generation == 499999)
-                //    Running = false;
+                if (Generation == MaxGeneration)
+                    Running = false;
 
                 GenerateNewPopulation();
 
@@ -372,7 +388,7 @@ namespace AI.Projects.Project4
             PopulationSize = 10;
             Generation = 0;
             NotifyOfPropertyChanged(nameof(Generation));
-            DataCleared.Invoke(this, new EventArgs());
+            DataCleared?.Invoke(this, new EventArgs());
         }
 
         /// <summary>

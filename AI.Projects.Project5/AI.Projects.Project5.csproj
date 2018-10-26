@@ -44,10 +44,23 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AI.Projects.Project4\AI.Projects.Project4.csproj">
+      <Project>{84745260-ECE7-49C9-87C3-BA36B2EF8A9A}</Project>
+      <Name>AI.Projects.Project4</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AI.Projects.Shared\AI.Projects.Shared.csproj">
       <Project>{01720AFF-E52B-4D25-9178-E0D7BC5A6E46}</Project>
       <Name>AI.Projects.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="TestFiles\Random11.tsp" />
+    <None Include="TestFiles\Random22.tsp" />
+    <None Include="TestFiles\Random222.tsp" />
+    <None Include="TestFiles\Random44.tsp" />
+    <None Include="TestFiles\Random77.tsp" />
+    <None Include="TestFiles\Random97.tsp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

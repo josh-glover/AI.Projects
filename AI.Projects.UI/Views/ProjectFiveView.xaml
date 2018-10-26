@@ -4,9 +4,66 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AI.Projects.UI.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             xmlns:oxy="http://oxyplot.org/wpf"
+             mc:Ignorable="d"
+             d:DesignHeight="600"
+             d:DesignWidth="450">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="Test File"
+                  Grid.Row="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding CurrentFile.Name, Mode=OneWay}"
+                           VerticalAlignment="Center"
+                           Margin="5"
+                           Grid.Column="0" />
+                <Button x:Name="BrowseFiles"
+                        Content="Browse"
+                        Margin="2.5"
+                        Grid.Column="1" />
+            </Grid>
+        </GroupBox>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Grid.Row="1">
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Margin="5">
+                <TextBlock Text="Generation:" />
+                <TextBlock Text="{Binding GSolver.Generation}" />
+            </StackPanel>
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Margin="5">
+                <TextBlock Text="Current Distance:" />
+                <TextBlock Text="{Binding BestDistance}" />
+            </StackPanel>
+        </StackPanel>
+
+        <TabControl Grid.Row="3">
+            <TabItem Header="Current Best Path">
+                <oxy:PlotView Model="{Binding PlotInfo}" />
+            </TabItem>
+            <TabItem Header="Change Graph">
+                <oxy:PlotView Model="{Binding ChangeInfo}" />
+            </TabItem>
+        </TabControl>
+
+        <Button x:Name="StartGeneration"
+                Content="Start Generation"
+                IsEnabled="{Binding GSolver.Running, Converter={StaticResource InvertedBoolConverter}}"
+                Grid.Row="4" />
     </Grid>
 </UserControl>

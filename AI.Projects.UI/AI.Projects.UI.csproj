@@ -85,7 +85,7 @@
       <DependentUpon>ProjectFiveView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProjectFiveViewModel.cs">
-          <DependentUpon>ProjectFiveView.xaml</DependentUpon>
+      <DependentUpon>ProjectFiveView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProjectFourView.xaml.cs">
       <DependentUpon>ProjectFourView.xaml</DependentUpon>
@@ -192,6 +192,10 @@
     <ProjectReference Include="..\AI.Projects.Project4\AI.Projects.Project4.csproj">
       <Project>{84745260-ECE7-49C9-87C3-BA36B2EF8A9A}</Project>
       <Name>AI.Projects.Project4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AI.Projects.Project5\AI.Projects.Project5.csproj">
+      <Project>{5B27CC29-DAD0-4043-8D01-3D83160E4A41}</Project>
+      <Name>AI.Projects.Project5</Name>
     </ProjectReference>
     <ProjectReference Include="..\AI.Projects.Shared\AI.Projects.Shared.csproj">
       <Project>{01720AFF-E52B-4D25-9178-E0D7BC5A6E46}</Project>
