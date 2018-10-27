@@ -54,10 +54,25 @@
 
         <TabControl Grid.Row="3">
             <TabItem Header="Current Best Path">
-                <oxy:PlotView Model="{Binding PlotInfo}" />
+                <oxy:PlotView Model="{Binding BestPathInfo}" />
             </TabItem>
-            <TabItem Header="Change Graph">
-                <oxy:PlotView Model="{Binding ChangeInfo}" />
+            <TabItem Header="Trips">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*" />
+                    </Grid.RowDefinitions>
+                    <ListBox SelectedItem="{Binding SelectedTrip}" ItemsSource="{Binding TripCollection}" 
+                             Grid.Row="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        </ListBox>
+                    <oxy:PlotView Model="{Binding SelectedPathInfo}"
+                                  Grid.Row="1"/>
+                </Grid>
             </TabItem>
         </TabControl>
 

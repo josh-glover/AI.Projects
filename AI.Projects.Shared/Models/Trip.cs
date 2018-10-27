@@ -7,9 +7,14 @@ namespace AI.Projects.Shared.Models
     public class Trip
     {
         /// <summary>
+        /// A property that stores the name of this path
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// A property that stores the fitness value for the trip
         /// </summary>
-       public double Fitness { get; set; }
+        public double Fitness { get; set; }
 
         /// <summary>
         /// A property that stores all the stops in this permutation of the route

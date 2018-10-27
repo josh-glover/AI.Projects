@@ -1,6 +1,8 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using AI.Projects.Project4;
 using AI.Projects.Shared.Events;
@@ -12,6 +14,7 @@ namespace AI.Projects.Project5
     public class CrowdSolver : ISolver, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        public EventHandler<TripAddedEventArgs> NewTripFound;
 
         public GeneticSolver GSolver { get; set; }
         public bool Running { get; set; }
@@ -29,8 +32,9 @@ namespace AI.Projects.Project5
 
         public void GetShortestPath()
         {
-            GSolver.NewBestTrip += OnNewBestTrip;
+
             Running = true;
+            int pathCount = 0;
 
             while (Running)
             {
@@ -38,7 +42,10 @@ namespace AI.Projects.Project5
 
                 while (GSolver.Running) { /* Wait for a solution */ }
 
-                TripCollection.Add(GSolver.BestTrip);
+                pathCount++;
+                Trip newTrip = GSolver.BestTrip;
+                newTrip.Name = $"Trip {pathCount}";
+                NewTripFound?.Invoke(this, new TripAddedEventArgs(newTrip));
             }
         }
 
@@ -47,12 +54,31 @@ namespace AI.Projects.Project5
             GSolver.OrderData(cities);
         }
 
-        private void OnNewBestTrip(object sender, BestFoundEventArgs args)
+        private void AggregateTrips()
         {
+            Trip newTrip = new Trip(new List<City>());
 
+            for (int x = 0; x < Destinations.Count + 2; x++)
+            {
+                City canidateCity;
+                Dictionary<City, int> cityFrequencies = new Dictionary<City, int>();
+
+                for (int y = 0; y < TripCollection.Count; y++)
+                {
+                    City city = TripCollection[y].Stops[x];
+
+                    if (cityFrequencies.Keys.Contains(city))
+                        cityFrequencies[city] += 1;
+                    else
+                        cityFrequencies.Add(city, 1);
+                }
+
+                // Get the most frequent, break ties from shortest distance
+
+            }
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void NotifyOfPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

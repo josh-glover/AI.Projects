@@ -374,7 +374,7 @@ namespace AI.Projects.Project4
             if (Population[0] == oldBest) return false;
 
             BestTrip = Population[0];
-            NewBestTrip.Invoke(this, new BestFoundEventArgs(Generation, BestTrip));
+            NewBestTrip?.Invoke(this, new BestFoundEventArgs(Generation, BestTrip));
             return true;
         }
 

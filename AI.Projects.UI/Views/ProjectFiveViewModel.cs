@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using AI.Projects.Project5;
+using AI.Projects.Shared.Events;
 using AI.Projects.Shared.Models;
 using Caliburn.Micro;
 using Microsoft.Win32;
@@ -13,19 +16,51 @@ namespace AI.Projects.UI.Views
 {
     public class ProjectFiveViewModel : Screen
     {
+        private Trip _selectedTrip;
+
         public CrowdSolver CSolver { get; set; }
+
         /// <summary>
         /// A property that stores the file being used for information
         /// </summary>
         public FileInfo CurrentFile { get; set; }
+
         /// <summary>
         /// A property that stores a list of the points to be sent to a solver
         /// </summary>
         public List<City> Cities { get; set; }
         /// <summary>
+        /// A property that stores the selected trip in the trip tab
+        /// </summary>
+        public Trip SelectedTrip
+        {
+            get
+            {
+                return _selectedTrip;
+            }
+            set
+            {
+                _selectedTrip = value;
+
+                SelectedPathSeries.Points.Clear();
+                foreach (City point in _selectedTrip.Stops)
+                    SelectedPathSeries.Points.Add(new DataPoint(point.XPosition, point.YPosition));
+
+                SelectedPathInfo.InvalidatePlot(true);
+            }
+        }
+        /// <summary>
+        /// A property that stores a list of the generated trips
+        /// </summary>
+        public ObservableCollection<Trip> TripCollection { get; set; }
+        /// <summary>
         /// A property that stores the model to control the graph UI
         /// </summary>
-        public PlotModel PlotInfo { get; set; }
+        public PlotModel BestPathInfo { get; set; }
+        /// <summary>
+        /// A property that stores the model to control the trips graph
+        /// </summary>
+        public PlotModel SelectedPathInfo { get; set; }
         /// <summary>
         /// A property that stores the model to control the graph UI
         /// </summary>
@@ -33,11 +68,19 @@ namespace AI.Projects.UI.Views
         /// <summary>
         /// A property that stores information of the scatter plot
         /// </summary>
-        public ScatterSeries CitySeries { get; set; }
+        public ScatterSeries BestTripCitySeries { get; set; }
+        /// <summary>
+        /// A property that stores information of the scatter plot
+        /// </summary>
+        public ScatterSeries SelectedTripCitySeries { get; set; }
         /// <summary>
         /// A property that stores the information of the graph connections
         /// </summary>
         public LineSeries PathSeries { get; set; }
+        /// <summary>
+        /// A property that stores the information of the selected trips connections
+        /// </summary>
+        public LineSeries SelectedPathSeries { get; set; }
         /// <summary>
         /// A property that stores the information of the graph changes
         /// </summary>
@@ -49,16 +92,26 @@ namespace AI.Projects.UI.Views
         public ProjectFiveViewModel()
         {
             Cities = new List<City>();
-            PlotInfo = new PlotModel();
+            TripCollection = new ObservableCollection<Trip>();
+
+            BestPathInfo = new PlotModel();
+            SelectedPathInfo = new PlotModel();
             ChangeInfo = new PlotModel();
-            CitySeries = new ScatterSeries();
+
+            BestTripCitySeries = new ScatterSeries();
+            SelectedTripCitySeries = new ScatterSeries();
             PathSeries = new LineSeries();
+            SelectedPathSeries = new LineSeries();
             ChangeSeries = new LineSeries();
-            PlotInfo.Series.Add(PathSeries);
-            PlotInfo.Series.Add(CitySeries);
+
+            BestPathInfo.Series.Add(PathSeries);
+            BestPathInfo.Series.Add(BestTripCitySeries);
+            SelectedPathInfo.Series.Add(SelectedPathSeries);
+            SelectedPathInfo.Series.Add(SelectedTripCitySeries);
             ChangeInfo.Series.Add(ChangeSeries);
 
             CSolver = new CrowdSolver();
+            CSolver.NewTripFound += OnNewTripFound;
         }
 
         /// <summary>
@@ -66,8 +119,10 @@ namespace AI.Projects.UI.Views
         /// </summary>
         private void ReadFile()
         {
-            CitySeries.Points.Clear();
+            BestTripCitySeries.Points.Clear();
+            SelectedTripCitySeries.Points.Clear();
             Cities.Clear();
+
             // Makes sure the file is valid
             if (CurrentFile != null && !CurrentFile.Exists)
             {
@@ -101,10 +156,11 @@ namespace AI.Projects.UI.Views
                 Cities.Add(city);
 
                 // Add the city to the graph
-                CitySeries.Points.Add(new ScatterPoint(city.XPosition, city.YPosition));
+                BestTripCitySeries.Points.Add(new ScatterPoint(city.XPosition, city.YPosition));
+                SelectedTripCitySeries.Points.Add(new ScatterPoint(city.XPosition, city.YPosition));
             }
 
-            PlotInfo.InvalidatePlot(true);
+            BestPathInfo.InvalidatePlot(true);
 
             CSolver.OrderData(Cities);
         }
@@ -153,7 +209,14 @@ namespace AI.Projects.UI.Views
         /// </summary>
         public void StartGeneration()
         {
-            CSolver.GetShortestPath();
+            TripCollection.Clear();
+            Task.Run(() => { CSolver.GetShortestPath(); });
+        }
+
+        private void OnNewTripFound(object sender, TripAddedEventArgs args)
+        {
+            OnUIThread(() => { TripCollection.Add(args.NewTrip); });
+            NotifyOfPropertyChange();
         }
     }
 }
