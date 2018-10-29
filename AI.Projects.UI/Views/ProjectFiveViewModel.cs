@@ -76,7 +76,7 @@ namespace AI.Projects.UI.Views
         /// <summary>
         /// A property that stores the information of the graph connections
         /// </summary>
-        public LineSeries PathSeries { get; set; }
+        public LineSeries BestPathSeries { get; set; }
         /// <summary>
         /// A property that stores the information of the selected trips connections
         /// </summary>
@@ -100,17 +100,18 @@ namespace AI.Projects.UI.Views
 
             BestTripCitySeries = new ScatterSeries();
             SelectedTripCitySeries = new ScatterSeries();
-            PathSeries = new LineSeries();
+            BestPathSeries = new LineSeries();
             SelectedPathSeries = new LineSeries();
             ChangeSeries = new LineSeries();
 
-            BestPathInfo.Series.Add(PathSeries);
+            BestPathInfo.Series.Add(BestPathSeries);
             BestPathInfo.Series.Add(BestTripCitySeries);
             SelectedPathInfo.Series.Add(SelectedPathSeries);
             SelectedPathInfo.Series.Add(SelectedTripCitySeries);
             ChangeInfo.Series.Add(ChangeSeries);
 
             CSolver = new CrowdSolver();
+            CSolver.NewBestFound += OnNewBestFound;
             CSolver.NewTripFound += OnNewTripFound;
         }
 
@@ -161,6 +162,7 @@ namespace AI.Projects.UI.Views
             }
 
             BestPathInfo.InvalidatePlot(true);
+            SelectedPathInfo.InvalidatePlot(true);
 
             CSolver.OrderData(Cities);
         }
@@ -217,6 +219,16 @@ namespace AI.Projects.UI.Views
         {
             OnUIThread(() => { TripCollection.Add(args.NewTrip); });
             NotifyOfPropertyChange();
+        }
+
+        private void OnNewBestFound(object sender, BestFoundEventArgs args)
+        {
+            BestPathSeries.Points.Clear();
+
+            foreach (City stop in args.NewBest.Stops)
+                BestPathSeries.Points.Add(new DataPoint(stop.XPosition, stop.YPosition));
+
+            BestPathInfo.InvalidatePlot(true);
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AI.Projects.Shared.Models;
+﻿using AI.Projects.Shared.Models;
 
 namespace AI.Projects.Shared.Events
 {

@@ -239,34 +239,36 @@ namespace AI.Projects.Project4
 
             if (parentOne.Fitness > parentTwo.Fitness)
             {
-                foreach (City fitCity in parentOne.Stops)
+                newPath.Add(parentOne.Stops[0]);
+                foreach (City fitCity in parentOne.Stops.Skip(1).Take(parentOne.Stops.Count - 2))
                 {
                     if (random.Next(100) + 1 < 60)
                         newPath.Add(fitCity);
                 }
 
-                foreach (City city in parentTwo.Stops)
+                foreach (City city in parentTwo.Stops.Skip(1).Take(parentTwo.Stops.Count - 2))
                 {
                     if (!newPath.Contains(city))
                         newPath.Add(city);
                 }
+                newPath.Add(parentOne.Stops[parentOne.Stops.Count - 1]);
             }
             else
             {
-                foreach (City fitCity in parentTwo.Stops)
+                newPath.Add(parentTwo.Stops[0]);
+                foreach (City fitCity in parentTwo.Stops.Skip(1).Take(parentTwo.Stops.Count - 2))
                 {
                     if (random.Next(100) + 1 < 60)
                         newPath.Add(fitCity);
                 }
 
-                foreach (City city in parentOne.Stops)
+                foreach (City city in parentOne.Stops.Skip(1).Take(parentOne.Stops.Count - 2))
                 {
                     if (!newPath.Contains(city))
                         newPath.Add(city);
                 }
+                newPath.Add(parentTwo.Stops[parentTwo.Stops.Count - 1]);
             }
-
-            newPath.Add(newPath[0]);
 
             return new Trip(newPath);
         }
@@ -284,15 +286,16 @@ namespace AI.Projects.Project4
             List<City> newPath = new List<City>();
             int index = random.Next(1, parentOne.Stops.Count - 1);
 
-            newPath.AddRange(parentOne.Stops.Take(index));
+            newPath.Add(parentOne.Stops[0]);
+            newPath.AddRange(parentOne.Stops.Skip(1).Take(index));
 
-            foreach (City city in parentTwo.Stops)
+            foreach (City city in parentTwo.Stops.Skip(1).Take(parentTwo.Stops.Count - 2))
             {
                 if (!newPath.Contains(city))
                     newPath.Add(city);
             }
 
-            newPath.Add(newPath[0]);
+            newPath.Add(parentOne.Stops[parentOne.Stops.Count - 1]);
 
             return new Trip(newPath);
         }
@@ -315,7 +318,7 @@ namespace AI.Projects.Project4
             City stop = newTrip.Stops[index];
 
             // Calculate the neighbors index
-            if (index + 1 == newTrip.Stops.Count)
+            if (index + 1 == newTrip.Stops.Count - 1)
                 index = 1;
             else
                 index++;
