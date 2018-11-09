@@ -1,41 +1,58 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using AI.Projects.Project4;
 using AI.Projects.Shared.Events;
 using AI.Projects.Shared.Interfaces;
 using AI.Projects.Shared.Models;
-using AI.Projects.Shared.Utilities;
 
 namespace AI.Projects.Project5
 {
-    public class CrowdSolver : ISolver, INotifyPropertyChanged
+    public class CrowdSolver : ISolver
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        // Event Handlers
         public EventHandler<BestFoundEventArgs> NewBestFound;
         public EventHandler<TripAddedEventArgs> NewTripFound;
 
+        /// <summary>
+        /// A property that stores the genetic solver to generate solutions
+        /// </summary>
         public GeneticSolver GSolver { get; set; }
+        /// <summary>
+        /// A property that indicates the status of the algorithm
+        /// </summary>
         public bool Running { get; set; }
+        /// <summary>
+        /// A property that stores the starting point of the path
+        /// </summary>
         public City Origin { get; set; }
+        /// <summary>
+        /// A property that stores a list of the points that can be visited
+        /// </summary>
         public List<City> Destinations { get; set; }
-        public List<City> AllCities { get; set; }
+        /// <summary>
+        /// A property that stores the current best trip
+        /// </summary>
         public Trip BestTrip { get; set; }
-        public List<Trip> TripCollection { get; set; }
+        /// <summary>
+        /// A property that stores a matrix of the frequencies a city appears in a spot of a path
+        /// </summary>
+        public int[][] FrequencyMatrix { get; set; }
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public CrowdSolver()
         {
-            GSolver = new GeneticSolver(99999);
+            GSolver = new GeneticSolver(49999);
             Destinations = new List<City>();
-            TripCollection = new List<Trip>();
         }
 
+        /// <summary>
+        /// A method that runs the solver to get the result
+        /// </summary>
         public void GetShortestPath()
         {
-
             Running = true;
             int pathCount = 0;
             BestTrip = new Trip(new List<City>());
@@ -49,83 +66,90 @@ namespace AI.Projects.Project5
                 pathCount++;
                 Trip newTrip = GSolver.BestTrip;
                 newTrip.Name = $"Trip {pathCount}";
-                TripCollection.Add(newTrip);
                 NewTripFound?.Invoke(this, new TripAddedEventArgs(newTrip));
+
+                for (int s = 0; s < newTrip.Stops.Count; s++)
+                    FrequencyMatrix[newTrip.Stops[s].Index - 1][s]++;
 
                 AggregateTrips();
             }
         }
 
+        /// <summary>
+        /// A method that parses a list of cities into properties used by the solver
+        /// </summary>
+        /// <param name="cities">The cities to be parsed</param>
         public void OrderData(List<City> cities)
         {
             Origin = cities[0];
             Destinations = cities.Skip(1).ToList();
-            AllCities = cities;
+            SetFrequencyMatrix();
             GSolver.OrderData(cities);
         }
 
+        /// <summary>
+        /// A method that creates the common path based off of the frequency matrix
+        /// </summary>
         private void AggregateTrips()
         {
-            Trip newTrip = new Trip(new List<City>());
-            City[] stops = new City[AllCities.Count + 1];
+            City[] stops = new City[Destinations.Count + 2];
 
-            for (int x = 0; x < Destinations.Count + 2; x++)
+            // Set the paths start and end
+            stops[0] = stops[stops.Length - 1] = Origin;
+
+            // Loop for each unassigned path position
+            for (int s = 1; s < stops.Length - 1; s++)
             {
-                int highestFreq = 0;
-                int[] cityFrequencies = new int[AllCities.Count];
-
-                foreach (Trip trip in TripCollection)
+                // Find the highest frequency for the spot
+                int hFreq = 0;
+                for (int c = 1; c < Destinations.Count + 1; c++)
                 {
-                    City city = trip.Stops[x];
+                    int freq = FrequencyMatrix[c][s];
 
-                    cityFrequencies[city.Index - 1]++;
-
-                    if (cityFrequencies[city.Index - 1] > highestFreq)
-                        highestFreq = cityFrequencies[city.Index - 1];
+                    if (freq > hFreq)
+                        hFreq = freq;
                 }
 
-                List<City> pCities = new List<City>();
+                // List the potential cities for the spot
+                List<City> pCities = Destinations.Where(city => FrequencyMatrix[city.Index - 1][s] == hFreq).ToList();
 
-                for (int z = 0; z < cityFrequencies.Length; z++)
+                // Add a city into the spot
+                foreach (City pCity in pCities)
                 {
-                    City cityOption = AllCities.Find(c => c.Index == z + 1);
-
-                    if (cityFrequencies[z] == highestFreq)
-                        pCities.Add(cityOption);
+                    if (!stops.Contains(pCity))
+                        stops[s] = pCity;
                 }
-
-
-                //if (pCities.Count > 1)
-                //{
-                //    if (x == 0)
-                //    {
-                //        stops[x] = pCities[0];
-                //        return;
-                //    }
-
-                //    City cCity = pCities[0];
-
-                    for (int a = 0; a < pCities.Count; a++)
-                    {
-                        if(pCities[a] != stops[0] && stops.Contains(pCities[a]))
-                            continue;
-                        stops[x] = pCities[a];
-                    }
-                //}
-                //else if (pCities.Count == 1)
-                //{
-                //    stops[x] = pCities[0];
-                //}
             }
 
-            newTrip.Stops = stops.ToList();
-            BestTrip = newTrip;
+            // Create the new common trip
+            BestTrip = new Trip(stops.ToList());
             NewBestFound?.Invoke(this, new BestFoundEventArgs(0, BestTrip));
         }
 
-        protected virtual void NotifyOfPropertyChanged([CallerMemberName] string propertyName = null)
+        /// <summary>
+        /// A method to initialize the frequency matrix
+        /// </summary>
+        private void SetFrequencyMatrix()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            FrequencyMatrix = new int[Destinations.Count + 1][];
+            for (int i = 0; i < FrequencyMatrix.Length; i++)
+                FrequencyMatrix[i] = new int[Destinations.Count + 2];
+        }
+
+        /// <summary>
+        /// A debug method to print the frequency matrix to the console
+        /// </summary>
+        private void PrintMatrix()
+        {
+            foreach (int[] col in FrequencyMatrix)
+            {
+                Console.Write("|");
+                foreach (int row in col)
+                    Console.Write($" {row} |");
+                Console.Write("\n");
+            }
+            Console.Write("\n");
+
         }
     }
 }

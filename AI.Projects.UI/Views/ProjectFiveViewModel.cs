@@ -16,15 +16,21 @@ namespace AI.Projects.UI.Views
 {
     public class ProjectFiveViewModel : Screen
     {
+        // Fields
         private Trip _selectedTrip;
 
+        /// <summary>
+        /// A property that stores the crowd solver to get the shortest path
+        /// </summary>
         public CrowdSolver CSolver { get; set; }
-
+        /// <summary>
+        /// A property that stores the current distance of the common path
+        /// </summary>
+        public double BestDistance { get; set; }
         /// <summary>
         /// A property that stores the file being used for information
         /// </summary>
         public FileInfo CurrentFile { get; set; }
-
         /// <summary>
         /// A property that stores a list of the points to be sent to a solver
         /// </summary>
@@ -85,12 +91,13 @@ namespace AI.Projects.UI.Views
         /// A property that stores the information of the graph changes
         /// </summary>
         public LineSeries ChangeSeries { get; set; }
-
+        
         /// <summary>
         /// Default Constructor
         /// </summary>
         public ProjectFiveViewModel()
         {
+            BestDistance = 0;
             Cities = new List<City>();
             TripCollection = new ObservableCollection<Trip>();
 
@@ -214,21 +221,33 @@ namespace AI.Projects.UI.Views
             TripCollection.Clear();
             Task.Run(() => { CSolver.GetShortestPath(); });
         }
-
+        
+        /// <summary>
+        /// A method called when a new solution is generated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void OnNewTripFound(object sender, TripAddedEventArgs args)
         {
             OnUIThread(() => { TripCollection.Add(args.NewTrip); });
             NotifyOfPropertyChange();
         }
 
+        /// <summary>
+        /// A method called when a new common path is created
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void OnNewBestFound(object sender, BestFoundEventArgs args)
         {
+            BestDistance = args.NewBest.GetDistance();
             BestPathSeries.Points.Clear();
 
             foreach (City stop in args.NewBest.Stops)
                 BestPathSeries.Points.Add(new DataPoint(stop.XPosition, stop.YPosition));
 
             BestPathInfo.InvalidatePlot(true);
+            NotifyOfPropertyChange(nameof(BestDistance));
         }
     }
 }

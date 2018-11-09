@@ -41,8 +41,8 @@
             <StackPanel Orientation="Vertical"
                         HorizontalAlignment="Center"
                         Margin="5">
-                <TextBlock Text="Generation:" />
-                <TextBlock Text="{Binding GSolver.Generation}" />
+                <TextBlock Text="Trip Count:" />
+                <TextBlock Text="{Binding TripCollection.Count}" />
             </StackPanel>
             <StackPanel Orientation="Vertical"
                         HorizontalAlignment="Center"
